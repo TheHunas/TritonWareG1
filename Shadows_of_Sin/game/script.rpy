@@ -85,6 +85,110 @@ label start:
 
     "You scan the dimly lit room, carefully taking in your surroundings."
 
-    # This ends the game.
+    "Books line the vintage wallpapered walls. A PC desk placed in the middle of the room demands your attention."
 
-    return
+    scene desk_zoomin with dissolve
+
+    "As you creep closer to the desk you notice something sinister. Blood. Everywhere."
+
+    mc "Blood? What the hell?"
+
+    "Upon closer inspection, the blood is thoroughly caked on the wood of the desk. Whatever happened here, it wasn’t recent."
+
+    "Without thinking, you touch the bloodstained wood with your hands. You don’t know what possessed you to touch it."
+
+    mc "..."
+
+    "There’s something drawing you in. You feel strangely calm, or maybe even comforted? You feel that you should be more frightened than you are."
+
+    mc "Just what kind of life was I leading?"
+
+    scene study with dissolve
+
+    "You back away from the desk, taking in the room in its entirety again. You have work to do."
+
+    mc "Right, a key. There’s gotta be one somewhere. Now… where to look first?"
+
+    call screen study_nav
+
+    screen study_nav():
+        add "study"
+        modal True
+
+        imagebutton auto "painting_%s":
+            focus_mask True
+            action Jump("observe_painting")
+
+        imagebutton auto "clock_%s":
+            focus_mask True
+            action Jump("observe_clock")
+
+        imagebutton auto "computer_%s":
+            focus_mask True
+            action Jump("observe_computer")
+
+        imagebutton auto "lamp_%s":
+            focus_mask True
+            action Jump("observe_lamp")
+
+        imagebutton auto "newspaper_%s":
+            focus_mask True
+            action Jump("observe_newspaper")
+
+        imagebutton auto "chair_%s":
+            focus_mask True
+            action Jump("observe_chair")
+
+        imagebutton auto "rbookcase_%s":
+            focus_mask True
+            action Jump("observe_rbookcase")
+
+        imagebutton auto "lbookcase_%s":
+            focus_mask True
+            action Jump("observe_lbookcase")
+
+label observe_painting:
+    scene painting_zoomin
+
+    mc "this looks familiar"
+    call screen study_nav
+
+label observe_clock:
+    scene clock_zoomin
+
+    mc "the hands arent moving"
+    call screen study_nav
+
+label observe_chair:
+    scene study
+    mc "looks uncomfortable"
+    call screen study_nav
+
+label observe_computer:
+    scene study
+    mc "looks like it needs a passcode"
+    call screen study_nav
+
+label observe_lamp:
+    scene study
+    mc "should i turn it off?"
+    call screen study_nav
+
+label observe_newspaper:
+    scene study
+    mc "i aint reading allat"
+    call screen study_nav
+
+label observe_rbookcase:
+    scene study
+    mc "i dont want to touch the books with blood on them"
+    call screen study_nav
+
+label observe_lbookcase:
+    scene study
+    mc "just looks like books"
+    call screen study_nav
+
+# This ends the game.
+
+return
