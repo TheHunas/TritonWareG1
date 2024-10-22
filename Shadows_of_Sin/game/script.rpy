@@ -7,12 +7,15 @@ define mc = Character("???")
 
 $ password = null
 
+default attempts = 0
+
 default unlocked = False
 
 # The game starts here.
 
 label start:
 
+    play music "audio/calm_bgm.mp3"
     scene entrance with dissolve
 
     mc "{i}zzz...grumble...grumble...zzz{/i}"
@@ -25,7 +28,7 @@ label start:
 
     mc "What is this? Where am I?"
 
-    "You look around the long hallway you mysteriously awoke in. Within the worn down hallway lies cobwebs
+    "You look around the long hallway you mysteriously awoke in. Within the worn down hallway lie cobwebs
     lined in the corners and the floor is caked in dust. This place appears to be from a forgotten time."
 
     mc "What is this place? It looks like a Halloween prop. Why is it so run down?"
@@ -57,12 +60,14 @@ label start:
 
     mc "This is no time to fool around, let’s go."
 
+    play sound "audio/locked_door_sfx.mp3"
     "You grab the doorknob and attempt to twist, only to find it wedged in place."
 
     mc "What is this? It’s locked… I’m locked inside?"
 
     "You pull harder and harder until you’re sweating. Your brow furrows, face hot."
 
+    play sound "audio/locked_door_sfx.mp3"
     mc "Fuck, OPEN!!"
 
     "You’re banging on the door with your fists, and start kicking it out of frustration. 
@@ -81,6 +86,7 @@ label start:
 
     mc "Please, please open."
 
+    play sound "audio/creaky_door_sfx.wav"
     "You turn the knob slowly, anticipating the worst. To your surprise, it opens. You let out a sigh of relief."
 
     mc "Ok…it opened. Let’s find out what’s happening."
@@ -199,7 +205,12 @@ label observe_computer:
     "A soft blue light is radiating from the PC."
     mc "I’m shocked this rundown place even has power. But that must mean someone turned it on…"
 
-    scene computer_locked with dissolve
+    if attempts == 0:
+        scene computer_locked
+    if attempts == 1:
+        scene computer_1incorrect
+    if attempts == 2:
+        scene computer_2incorrect
 
     "You take a closer look at the monitor and notice it’s asking for a 4 digit passcode to log in."
     "Enter in a code?"
@@ -207,28 +218,44 @@ label observe_computer:
     menu:
         "Yes":
             $ password = renpy.input("Enter a 4 digit code:", allow = "1234567890", length = 4)
-            if password == "0225":
+            if password == "0245":
+                stop music
                 mc "Come on…"
                 "LOGGING IN..."
+                play music "audio/calm_bgm.mp3"
                 "You release a sigh of relief."
                 mc "Finally, some good news. Weird that the time of the murder specifically was the key. Does this office belong to a detective on the case?" 
                 mc "Am I involved in this somehow? Well, before I dive down that rabbit hole let’s dig around on here."
                 "Strangely, there exists only a single text file on the screen titled “BASTARD”. It’s feels deliberate, as no trace of any other application or file is present. 
                 This text file is the PC’s only purpose."
                 "Hesitantly, you click on the text file to open it."
+                play sound "audio/click_sfx.wav"
                 scene computer_unlocked
                 "HAVE YOU HEARD OF “THE BASTARD’S CURSE?” THAT BOOK TALKS ABOUT BASTARDS LIKE YOU. ABOUT WHAT AWAITS SINNERS LIKE YOU. WHAT DO YOU THINK IT IS?"
                 mc "“The Bastard’s Curse” huh?? Weird note."
                 mc "All that work just to read that?? What a waste of time."
                 $ unlocked = True
-
                 call screen study_nav
 
             else:
-                "ERROR - WRONG PASSCODE"
-                mc "Shit, I can’t log in without that passcode… Maybe there’s some clues around this room. I’ll take a longer look."
-
-                call screen study_nav
+                play sound "audio/incorrect_sfx.wav"
+                $ attempts += 1
+                if attempts == 1:
+                    scene computer_1incorrect
+                    "ERROR - WRONG PASSCODE"
+                    mc "Shit, I can’t log in without that passcode… Maybe there’s some clues around this room. I’ll take a longer look."
+                    call screen study_nav
+                if attempts == 2:
+                    scene computer_2incorrect
+                    play music "audio/tense_bgm.mp3"
+                    "ERROR - WRONG PASSCODE"
+                    mc "Dammit, only one try left. I need to be more careful."
+                    call screen study_nav
+                if attempts == 3:
+                    scene computer_3incorrect
+                    "ERROR - WRONG PASSCODE"
+                    mc "Fuck."
+                    jump branch
 
         "No":
             "Let me look around the room some more first."
@@ -236,6 +263,7 @@ label observe_computer:
             call screen study_nav
 
 label observe_newspaper:
+    play sound "audio/paper_sfx.mp3"
     scene newspaper
     
     mc "Wow, what a tragedy..."
@@ -259,6 +287,7 @@ label observe_rbookcase:
         "You pick up the book, ignoring the blood stains as you flip through the pages."
         mc "Looks like there’s something sticking out in the middle."
 
+        play sound "audio/paper_sfx.mp3"
         scene book_key with dissolve
 
         "You flip through to the page marked by a bookmark. You find an antique key labeled “Master Bed.”"
@@ -283,9 +312,121 @@ label observe_lbookcase:
 
     call screen study_nav
 
-label good_end:
-    # This ends the game. 
+label branch:
+    stop music
+    scene computer_off
+    "Suddenly, the computer shut off and the lamp went out."
+    mc "What the hell?"
+    "Look up?"
+    menu:
+        "Yes":
+            jump restart
+        "No":
+            play sound "audio/creaky_floor_sfx.wav"
+            "You can hear footsteps outside the door."
+    
+    "LOOK UP!"
+    menu:
+        "Yes":
+            jump too_late
+        "No":
+            play sound "audio/creaky_door_sfx.wav"
+            "You hear the door open."
+            play sound "audio/creaky_floor_sfx.wav"
+            "The footsteps are getting louder, closer, but fear has you frozen in place."
+            "As seconds pass you begin to feel the breath of something looming over you."
+            "In that moment, you knew your fate was already set. You couldn't help but wonder if things might've turned out differently had you made better choices."
+        "I'm scared":
+            play sound "audio/creaky_door_sfx.wav"
+            "You hear the door open."
+            play sound "audio/creaky_floor_sfx.wav"
+            "The footsteps are getting louder, closer, but fear has you frozen in place."
+            "As seconds pass you begin to feel the breath of something looming over you."
+            "In that moment, you knew your fate was already set. You couldn't help but wonder if things might've turned out differently had you made better choices."
+    
+    "look up."
+    menu:
+        "yes":
+            jump death
+        "yes":
+            jump death
+
+label restart:
+    scene study_lights_off
+    "You can just barely make out the furniture in the darkness."
+    "As you take a look around, you can't shake this feeling of dread. You could sense something sinister approaching."
+
+    "Hide?"
+    menu:
+        "Yes":
+            scene desk_zoomin_dark
+            "You quickly run and crouch behind the desk."
+            play sound "audio/creaky_floor_sfx.wav"
+            mc "..."
+            "You begin holding your breath so as to not make any noises."
+            play sound "audio/creaky_floor_sfx.wav"
+            mc "..."
+            "The seconds felt like hours. You didn't know if you could hold out much longer."
+            play sound "audio/creaky_floor_sfx.wav"
+            mc "..."
+            "Finally, you hear the footsteps move away from the door. You're safe, for now."
+            scene study
+            "Suddenly, the computer and lamp turn back on. You let out a sigh of relief."
+            mc "{b}{i}Sigh.{/i}{/b} Well, I guess I should get back to my search."
+            $ attempts = 0
+            play music "audio/calm_bgm.mp3"
+            call screen study_nav
+
+        "No":
+            mc "I'm probably just imagining it."
+            mc "I should focus on getting the power back on, I can't make any progress like this."
+            "As you begin searching the room for a way to turn on the lights, you hear something."
+            play sound "audio/creaky_floor_sfx.wav"
+            jump too_late
+
+
+label too_late:
+    scene study_lights_off
+    "You can sense something is right outside the door."
+    "Hide?"
+    menu:
+        "Yes":
+            scene desk_zoomin_dark
+            "You quickly run and crouch behind the desk."
+            play sound "audio/creaky_door_sfx.wav"
+            mc "..."
+            "You begin holding your breath so as to not make any noises."
+            play sound "audio/creaky_floor_sfx.wav"
+            mc "..."
+            "The seconds felt like hours. You didn't know if you could hold out much longer."
+            mc "..."
+            "You are unsure of how much time has passed, but you hadn't heard any footsteps for a couple minutes."
+            mc "I should be in the clear."
+            "You slowly stand from where you were crouched behind the desk and take a look around."
+            jump death
+
+        "No":
+            play sound "audio/creaky_door_sfx.wav"
+            jump death
+
+label death:
+    scene monster
+    window hide
+    pause 3.0
+    window show
+    "..."
+    "......"
+    "........."
+    play sound "audio/jumpscare_sfx.wav"
+    pause 0.3
+    window hide
+    scene monster_game_over
+    pause 5.0
+    return
+
+label good_end: 
     scene book_nokey
     mc "“Master Bed…” must be one of the rooms out in the hall. Let’s go check it out."
-    #scene to_be_continued with dissolve
+    scene to_be_continued with dissolve
+    pause 5.0
     return
