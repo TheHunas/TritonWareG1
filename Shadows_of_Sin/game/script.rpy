@@ -175,7 +175,7 @@ label observe_clock:
     "It’s too silent. There’s no clicking of time. You notice the hands are frozen in place."
     mc "It must be broken. No surprise really, I think this clock might be older than me."
     "You make note of the time it froze on, 2:25. Whether its AM or PM remains a mystery."
-    "The silent and immobile clock hands really bother you for some reason. If at least the clock worked, you could have at least one clue of your surroundings."
+    "The silent and immobile clock hands really bother you for some reason. If the clock worked, you could have at least one clue of your surroundings."
     "Your thoughts start to wander. Is the clock broken, or is time itself stuck in place with you? You almost laugh at the absurdity of the idea."
     mc "Frozen huh… Get a grip man. I need to focus on clues, not old shitty clocks."
 
@@ -266,8 +266,11 @@ label observe_newspaper:
     play sound "audio/paper_sfx.mp3"
     scene newspaper
     
-    mc "Wow, what a tragedy..."
-    mc "Good thing that guy was caught."
+    mc "Silus Graves…a serial killer huh…"
+    "Why does this feel familiar? You feel a sense of unease."
+    mc "So they caught this Silus guy then. If this newspaper is out here, this must be recent then."
+    mc "I’m starting to wonder what my place in all of this is."
+    mc "I feel a connection to this case, I should try looking around for more clues."
 
     call screen study_nav
 
@@ -292,15 +295,52 @@ label observe_rbookcase:
 
         "You flip through to the page marked by a bookmark. You find an antique key labeled “Master Bed.”"
         mc "Well look at that…Looks like that file wasn’t a waste of time after all."
-        "Grab the key?"
-
+        scene book_nokey
+        "You twirl the cold brass key in your damp hands. You just now notice how sweaty you are. Your heart knocks violently against your chest."
+        "This feeling… it’s…fear."
+        mc "Am I seriously afraid right now? Surely I’m not the type of guy to get scared of an old run down house right? Haha…"
+        "No, it’s not the house that scares you… it’s the secrets you feel that will be revealed as you explore. It’s… you. You are your own source of fear."
+        mc "Shit. I should continue searching the house… right?"
+        
         menu:
             "Yes":
-                jump good_end
+                mc "That was a stupid question. I don’t have time to sit around pissing my pants."
+                "You steel yourself for what you might find and press on ahead. Let’s see what awaits you in the master bedroom."
+                scene to_be_continued with dissolve
+                pause 5.0
+                return
             "No":
-                mc "placeholder text"
+                mc "Fuck man, I have a REALLY bad feeling about this. Why don’t I remember anything anyways. Maybe I don’t remember for a reason."
+                mc "The past doesn’t matter anyways, what matters is just breaking out of this GODDAMN shithole!!"
+                scene entrance with dissolve
+                "Your heartbeat quickens, you’re now drenched in sweat. You rush back to the entrance you came from in a crazed frenzy."
+                play sound "audio/bang_sfx.mp3"
+                mc "LET ME OUT!! I’M NOT FUCKING AROUND!"
+                "Your anger and anxiety make you dizzy. You lose yourself to emotion."
+                "In a desperate attempt to escape, you punch and kick the door with all of your raw strength. The loud banging of your body against the wood echos throughout the empty hallway."
+                play sound "audio/bang2_sfx.mp3"
+                "{b}{i}BOOM...BOOM...{/i}{/b}"
+                "But it isn’t enough. How can a door be so strong? After a futile display of resistance, you slump to the ground, depleted of energy. You begin to spiral."
+                mc "{b}{i}Heavy panting{/i}{/b}"
+                mc "N…N-No… No way"
+                mc "I’m…g-going to die in this place - this hell."
+                stop music
+                play sound "audio/creaky_floor_sfx.wav"
+                "After a few moments, you hear something scratching the floorboards down the hall. You would go check if you had the energy to stand."
+                mc "W-What…"
+                "It’s quick! Before you can finish registering the sound, you see a spider like abominating rushing towards you."
+                scene entrance_monster
+                mc "N-no fucking way, no fucking way!! GET THE HELL AWAY FROM ME MONSTER!!"
+                "It’s too late. In mere seconds it races to you."
+                scene entrance_monster2
+                mc "NOO NOOO PLEASE, LEAVE ME ALONE!!!"
+                play sound "audio/gore_sfx.mp3"
+                "The monster tears apart at you, ripping apart your flesh. Your blood splatters over the old bloodstains of the hall."
+                mc "ACK! G-GET AWAY!!! AGhhh"
+                play sound "audio/jumpscare_sfx.wav"
+                pause 0.3
                 window hide
-                show game_over with dissolve
+                scene monster_game_over
                 pause 5.0
                 return
 
@@ -421,12 +461,5 @@ label death:
     pause 0.3
     window hide
     scene monster_game_over
-    pause 5.0
-    return
-
-label good_end: 
-    scene book_nokey
-    mc "“Master Bed…” must be one of the rooms out in the hall. Let’s go check it out."
-    scene to_be_continued with dissolve
     pause 5.0
     return
